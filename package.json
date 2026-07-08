@@ -1,22 +1,23 @@
 {
-  "name": "nodeproject",
+  "name": "password-vault-pro",
   "version": "1.0.0",
-  "description": "Minimal Node.js project configured for VS Code",
-  "main": "hello.js",
+  "description": "Advanced Password Vault Application with Password Generator, Vault, QR Codes, PDF Export, CSV Export, PWA Support and Analytics",
+  "main": "server.js",
   "scripts": {
-    "start": "node hello.js",
-    "dev": "nodemon hello.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
-  "engines": {
-    "node": ">=18"
-  },
-  "author": "",
+  "keywords": [
+    "password-manager",
+    "password-vault",
+    "nodejs",
+    "express",
+    "pwa",
+    "security"
+  ],
+  "author": "Your Name",
   "license": "MIT",
-  "devDependencies": {
-    "eslint": "^10.4.1",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.6",
-    "nodemon": "^3.1.14",
-    "prettier": "^3.8.3"
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }
