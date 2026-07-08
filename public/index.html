@@ -299,34 +299,73 @@ class="text-center">
 <div class="glass-card mt-4">
 
 <h3>Encrypted Vault</h3>
+<hr>
 
+<div class="mb-3">
 <input
 type="password"
 id="masterPassword"
-class="form-control mb-3"
-placeholder="Master Password">
-
-<textarea
-id="vaultData"
 class="form-control"
-rows="5"
-placeholder="Secure Notes">
-</textarea>
+placeholder="Master Password">
+</div>
 
-<div class="d-grid gap-2 mt-3">
-
-<button
-id="saveVaultBtn"
-class="btn btn-success">
-Save Vault
-</button>
-
+<!-- Locked State Message / Buttons -->
+<div id="vaultLockedState" class="d-grid gap-2">
 <button
 id="loadVaultBtn"
 class="btn btn-primary">
-Load Vault
+🔓 Unlock Vault
+</button>
+</div>
+
+<!-- Unlocked State Container -->
+<div id="vaultUnlockedState" style="display: none;">
+<h5 class="mt-4 mb-3">Add New Credential</h5>
+<div class="row g-2 mb-3">
+<div class="col-md-6">
+<input type="text" id="vaultPlatform" class="form-control" placeholder="Platform (e.g., GitHub, Google)">
+</div>
+<div class="col-md-6">
+<input type="text" id="vaultUsername" class="form-control" placeholder="Username / Email">
+</div>
+</div>
+
+<div class="input-group mb-3">
+<input type="text" id="vaultPassword" class="form-control" placeholder="Password">
+<button class="btn btn-outline-light" type="button" id="vaultAutofillBtn">
+✨ Autofill Generated
+</button>
+</div>
+
+<button id="addCredentialBtn" class="btn btn-success w-100 mb-4">
+➕ Add to Vault
 </button>
 
+<h5 class="mb-3">Saved Passwords</h5>
+<div class="table-responsive">
+<table class="table table-dark table-hover align-middle custom-vault-table">
+<thead>
+<tr>
+<th>Platform</th>
+<th>Username</th>
+<th>Password</th>
+<th class="text-end">Actions</th>
+</tr>
+</thead>
+<tbody id="credentialsTableBody">
+<!-- Dynamically populated -->
+</tbody>
+</table>
+</div>
+
+<div class="d-flex gap-2 mt-3">
+<button id="lockVaultBtn" class="btn btn-outline-warning w-50">
+🔒 Lock Vault
+</button>
+<button id="clearVaultBtn" class="btn btn-outline-danger w-50">
+🗑️ Reset Vault
+</button>
+</div>
 </div>
 
 </div>
