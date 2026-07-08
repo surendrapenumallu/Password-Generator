@@ -685,3 +685,39 @@ body.light .table{
     font-family: "JetBrains Mono", monospace;
     font-size: 0.9rem;
 }
+
+.vault-platform-github {
+    background: rgba(240, 246, 252, 0.15) !important;
+    color: #e6edf3 !important;
+    border: 1px solid rgba(240, 246, 252, 0.25) !important;
+}
+
+.vault-platform-netflix {
+    background: rgba(229, 9, 20, 0.15) !important;
+    color: #ff3344 !important;
+    border: 1px solid rgba(229, 9, 20, 0.35) !important;
+}
+
+.vault-platform-swiggy {
+    background: rgba(252, 128, 25, 0.15) !important;
+    color: #ff8a33 !important;
+    border: 1px solid rgba(252, 128, 25, 0.35) !important;
+}
+
+.vault-platform-google {
+    background: rgba(66, 133, 244, 0.15) !important;
+    color: #66a0ff !important;
+    border: 1px solid rgba(66, 133, 244, 0.35) !important;
+}
+
+.vault-platform-facebook {
+    background: rgba(24, 119, 242, 0.15) !important;
+    color: #4da3ff !important;
+    border: 1px solid rgba(24, 119, 242, 0.35) !important;
+}
+
+.vault-platform-amazon {
+    background: rgba(255, 153, 0, 0.15) !important;
+    color: #ffb733 !important;
+    border: 1px solid rgba(255, 153, 0, 0.35) !important;
+}

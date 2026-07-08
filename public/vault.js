@@ -8,6 +8,7 @@
 ===================================== */
 
 const masterPasswordInput = document.getElementById("masterPassword");
+const vaultPlatformSelect = document.getElementById("vaultPlatformSelect");
 const vaultPlatformInput = document.getElementById("vaultPlatform");
 const vaultUsernameInput = document.getElementById("vaultUsername");
 const vaultPasswordInput = document.getElementById("vaultPassword");
@@ -93,7 +94,14 @@ function renderVault() {
         // Platform Badge
         const tdPlatform = document.createElement("td");
         const spanPlatform = document.createElement("span");
-        spanPlatform.className = "vault-platform-badge";
+        
+        const platformLower = (cred.platform || "").toLowerCase();
+        let classSuffix = "default";
+        if (["github", "netflix", "swiggy", "google", "facebook", "amazon"].includes(platformLower)) {
+            classSuffix = platformLower;
+        }
+        
+        spanPlatform.className = `vault-platform-badge vault-platform-${classSuffix}`;
         spanPlatform.textContent = cred.platform || "Unknown";
         tdPlatform.appendChild(spanPlatform);
         tr.appendChild(tdPlatform);
@@ -136,7 +144,11 @@ function lockVault() {
     vaultUnlockedState.style.display = "none";
     masterPasswordInput.disabled = false;
     masterPasswordInput.value = "";
+    if (vaultPlatformSelect) {
+        vaultPlatformSelect.selectedIndex = 0;
+    }
     vaultPlatformInput.value = "";
+    vaultPlatformInput.style.display = "none";
     vaultUsernameInput.value = "";
     vaultPasswordInput.value = "";
 }
@@ -196,7 +208,18 @@ function loadVault() {
 }
 
 function addCredential() {
-    const platform = vaultPlatformInput.value.trim();
+    let platform = "";
+    if (vaultPlatformSelect) {
+        const selectedVal = vaultPlatformSelect.value;
+        if (selectedVal === "custom") {
+            platform = vaultPlatformInput.value.trim();
+        } else {
+            platform = selectedVal;
+        }
+    } else {
+        platform = vaultPlatformInput.value.trim();
+    }
+
     const username = vaultUsernameInput.value.trim();
     const password = vaultPasswordInput.value.trim();
     const masterPassword = masterPasswordInput.value.trim();
@@ -214,7 +237,11 @@ function addCredential() {
     localStorage.setItem("vaultLastSaved", new Date().toISOString());
 
     // Clear form inputs
+    if (vaultPlatformSelect) {
+        vaultPlatformSelect.selectedIndex = 0;
+    }
     vaultPlatformInput.value = "";
+    vaultPlatformInput.style.display = "none";
     vaultUsernameInput.value = "";
     vaultPasswordInput.value = "";
 
@@ -351,6 +378,18 @@ if (vaultAutofillBtn) {
             vaultPasswordInput.value = generatorPassword;
         } else {
             alert("❌ Generate a password first in the generator section!");
+        }
+    });
+}
+
+if (vaultPlatformSelect) {
+    vaultPlatformSelect.addEventListener("change", () => {
+        if (vaultPlatformSelect.value === "custom") {
+            vaultPlatformInput.style.display = "block";
+            vaultPlatformInput.focus();
+        } else {
+            vaultPlatformInput.style.display = "none";
+            vaultPlatformInput.value = "";
         }
     });
 }

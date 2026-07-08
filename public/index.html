@@ -323,7 +323,17 @@ class="btn btn-primary">
 <h5 class="mt-4 mb-3">Add New Credential</h5>
 <div class="row g-2 mb-3">
 <div class="col-md-6">
-<input type="text" id="vaultPlatform" class="form-control" placeholder="Platform (e.g., GitHub, Google)">
+<select id="vaultPlatformSelect" class="form-select mb-2">
+<option value="" disabled selected>Choose Platform...</option>
+<option value="GitHub">GitHub</option>
+<option value="Netflix">Netflix</option>
+<option value="Swiggy">Swiggy</option>
+<option value="Google">Google</option>
+<option value="Facebook">Facebook</option>
+<option value="Amazon">Amazon</option>
+<option value="custom">Other / Custom...</option>
+</select>
+<input type="text" id="vaultPlatform" class="form-control" placeholder="Custom Platform Name" style="display: none;">
 </div>
 <div class="col-md-6">
 <input type="text" id="vaultUsername" class="form-control" placeholder="Username / Email">
