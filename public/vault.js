@@ -75,13 +75,40 @@ function showUnlockedState() {
     masterPasswordInput.disabled = true;
 }
 
+function getServiceIcon(platform) {
+    const p = (platform || "").toLowerCase();
+    const icons = {
+        github:   { emoji: "🐙", cls: "svc-github" },
+        netflix:  { emoji: "N",  cls: "svc-netflix" },
+        swiggy:   { emoji: "🛵", cls: "svc-swiggy" },
+        google:   { emoji: "G",  cls: "svc-google" },
+        facebook: { emoji: "f",  cls: "svc-facebook" },
+        amazon:   { emoji: "📦", cls: "svc-amazon" },
+    };
+    return icons[p] || { emoji: platform ? platform[0].toUpperCase() : "?", cls: "svc-default" };
+}
+
+function getStrengthInfo(password) {
+    if (!password) return { score: 0, label: "None", level: "danger" };
+    const len = password.length;
+    let score = 0;
+    if (len >= 8) score++;
+    if (len >= 12) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+    const labels = ["Very Weak", "Weak", "Fair", "Good", "Strong", "Strong"];
+    const levels = ["danger", "danger", "warn", "warn", "", ""];
+    return { score, label: labels[score], level: levels[score] };
+}
+
 function renderVault() {
     credentialsTableBody.innerHTML = "";
     if (vaultCredentials.length === 0) {
         credentialsTableBody.innerHTML = `
             <tr>
-                <td colspan="4" class="text-center text-muted py-3">
-                    No credentials saved yet.
+                <td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px 0;font-size:0.85rem;">
+                    🔒 No credentials saved yet. Add one above!
                 </td>
             </tr>
         `;
@@ -90,46 +117,60 @@ function renderVault() {
 
     vaultCredentials.forEach((cred, index) => {
         const tr = document.createElement("tr");
+        const svc = getServiceIcon(cred.platform);
+        const str = getStrengthInfo(cred.password);
 
-        // Platform Badge
-        const tdPlatform = document.createElement("td");
-        const spanPlatform = document.createElement("span");
-        
-        const platformLower = (cred.platform || "").toLowerCase();
-        let classSuffix = "default";
-        if (["github", "netflix", "swiggy", "google", "facebook", "amazon"].includes(platformLower)) {
-            classSuffix = platformLower;
-        }
-        
-        spanPlatform.className = `vault-platform-badge vault-platform-${classSuffix}`;
-        spanPlatform.textContent = cred.platform || "Unknown";
-        tdPlatform.appendChild(spanPlatform);
-        tr.appendChild(tdPlatform);
+        // Service / Platform
+        const tdService = document.createElement("td");
+        tdService.innerHTML = `
+            <div class="service-cell">
+                <div class="service-icon ${svc.cls}">${svc.emoji}</div>
+                <span class="service-name">${cred.platform || "Unknown"}</span>
+            </div>
+        `;
+        tr.appendChild(tdService);
 
         // Username
         const tdUsername = document.createElement("td");
-        tdUsername.className = "vault-mono";
+        tdUsername.style.color = "var(--text-muted)";
+        tdUsername.style.fontSize = "0.85rem";
         tdUsername.textContent = cred.username || "—";
         tr.appendChild(tdUsername);
 
-        // Password Masked
+        // Password (masked)
         const tdPassword = document.createElement("td");
-        tdPassword.className = "vault-mono";
-        const spanPass = document.createElement("span");
-        spanPass.id = `pass-text-${index}`;
-        spanPass.textContent = "••••••••";
-        spanPass.dataset.realPassword = cred.password;
-        spanPass.dataset.visible = "false";
-        tdPassword.appendChild(spanPass);
+        tdPassword.innerHTML = `
+            <span id="pass-text-${index}" class="pass-cell-text"
+                  data-real-password="${cred.password}"
+                  data-visible="false">••••••••</span>
+        `;
         tr.appendChild(tdPassword);
+
+        // Strength dots
+        const tdStrength = document.createElement("td");
+        const filledDotClass = str.level ? `filled ${str.level}` : "filled";
+        const dotsHtml = Array.from({ length: 5 }, (_, i) =>
+            `<div class="dot ${i < str.score ? filledDotClass : ""}"></div>`
+        ).join("");
+        tdStrength.innerHTML = `
+            <div>
+                <span class="strength-text-sm">${str.label}</span>
+                <div class="strength-dots">${dotsHtml}<span style="font-size:0.7rem;color:var(--text-muted);margin-left:4px">${str.score}/5</span></div>
+            </div>
+        `;
+        tr.appendChild(tdStrength);
 
         // Actions
         const tdActions = document.createElement("td");
-        tdActions.className = "text-end";
         tdActions.innerHTML = `
-            <button class="btn btn-sm btn-outline-info me-1 vault-btn-sm" onclick="togglePasswordVisibility(${index})">👁️</button>
-            <button class="btn btn-sm btn-outline-light me-1 vault-btn-sm" onclick="copyToClipboard(document.getElementById('pass-text-${index}').dataset.realPassword)">📋 Copy</button>
-            <button class="btn btn-sm btn-outline-danger vault-btn-sm" onclick="deleteCredential(${index})">🗑️</button>
+            <div class="action-wrap">
+                <button class="act-btn act-copy" title="Copy password"
+                    onclick="copyToClipboard(document.getElementById('pass-text-${index}').dataset.realPassword)">📋</button>
+                <button class="act-btn act-edit" title="Show/Hide"
+                    onclick="togglePasswordVisibility(${index})">👁</button>
+                <button class="act-btn act-del" title="Delete"
+                    onclick="deleteCredential(${index})">🗑️</button>
+            </div>
         `;
         tr.appendChild(tdActions);
 

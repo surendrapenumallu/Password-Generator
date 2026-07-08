@@ -266,6 +266,10 @@ function updateStrength(
     password
 ) {
 
+    // Show strength section
+    const section = document.getElementById("strengthSection");
+    if (section) section.style.display = "block";
+
     let score = 0;
 
     if(password.length >= 8)
@@ -283,43 +287,20 @@ function updateStrength(
     if(/[^a-zA-Z0-9]/.test(password))
         score++;
 
+    const width = Math.max(10, (score / 5) * 100);
+    strengthBar.style.width = width + "%";
+
     if(score <= 2) {
-
-        strengthBar.style.width =
-            "30%";
-
-        strengthBar.className =
-            "progress-bar bg-danger";
-
-        strengthText.textContent =
-            "Weak";
-
+        strengthBar.style.background = "var(--danger)";
+        strengthText.textContent = "Weak";
     }
-
-    else if(score <= 4) {
-
-        strengthBar.style.width =
-            "70%";
-
-        strengthBar.className =
-            "progress-bar bg-warning";
-
-        strengthText.textContent =
-            "Medium";
-
+    else if(score <= 3) {
+        strengthBar.style.background = "var(--warning)";
+        strengthText.textContent = "Medium";
     }
-
     else {
-
-        strengthBar.style.width =
-            "100%";
-
-        strengthBar.className =
-            "progress-bar bg-success";
-
-        strengthText.textContent =
-            "Strong";
-
+        strengthBar.style.background = "var(--success)";
+        strengthText.textContent = "Strong";
     }
 
 }
